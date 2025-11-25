@@ -27,14 +27,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["*", "192.168.1.74:8000"]
+ALLOWED_HOSTS = ["localhost","*", "192.168.1.74:8000", '.fly.dev']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders', 
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -56,6 +57,8 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS =[
     "http://localhost:3000",
+    "https://frontend-icy-rain-6214.fly.dev",
+
 ]
 
 ROOT_URLCONF = 'backend.urls'

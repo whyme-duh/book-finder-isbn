@@ -43,50 +43,39 @@ def scrape_rating(isbn):
         soup = BeautifulSoup(response.content, 'html.parser')
         rating = soup.select_one('.RatingStatistics__rating')
         list_rating = soup.select_one('[data-testid="ratingsCount"]')
+        img = soup.select_one('.ResponsiveImage')
         
         if rating:
             rating = rating.get_text(separator="\n").strip()
             rating_count = list_rating.get_text().strip()
            
-            return f'{rating} ({rating_count})'
-            
-        # # Fallback for older layouts
-        # description_span = soup.select_one("div#description span")
-        # if description_span:
-        #     # If there's a "display:none" span (full text), use that, else use the visible one
-        #     full_text_span = description_span.find_next_sibling("span", style="display:none")
-        #     if full_text_span:
-        #         return full_text_span.get_text(separator="\n").strip()
-        #     return description_span.get_text(separator="\n").strip()
-
+            return [f'{rating} ({rating_count})', img['src']]
     except Exception as e:
         print(f"Scraping Error: {e}")
         
     return "Description not available via scraping."
 
-# ---------------------------------------------------------
-# 3. The Main View (Combines Both)
-# ---------------------------------------------------------
+
+        
+    return "Description not available via scraping."
+
 @require_http_methods(["GET"])
 def book_lookup(request, isbn):
-# 1. Sanitize Input
     clean_isbn = re.sub(r'[^0-9X]', '', str(isbn)).upper()
     
     if len(clean_isbn) not in [10, 13]:
         return JsonResponse({"error": "Invalid ISBN format"}, status=400)
 
-    # 2. Fetch Clean Data (API)
     book_data = get_api_data(clean_isbn)
     
-    # 3. Handle "Not Found" case
     if not book_data:
         return JsonResponse({"error": "Book not found in API"}, status=404)
 
-    # 4. Enrich with Scraping (The "Hybrid" part)
-    # We only scrape for the description, as APIs usually lack this.
-    print(f"Scraping description for {clean_isbn}...")
     rating = scrape_rating(clean_isbn)
-    book_data["rating"] = rating
+    book_data["rating"] = rating[0]
+    book_data["img"] = rating[1]
+    print(book_data["rating"], book_data["img"])
+    print(book_data)
     
-    # 5. Return JSON to React
+    
     return JsonResponse(book_data)
