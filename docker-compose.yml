@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # Django Backend Service
+  backend:
+    build: ./backend
+    container_name: isbn_backend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=1
+
+  # React Frontend Service
+  frontend:
+    build: ./frontend
+    container_name: isbn_frontend
+    # 'npm start' is the default command for Create React App
+    command: npm start
+    volumes:
+      - ./frontend:/app
+      # One-way volume to prevent local node_modules from overriding container's
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      # These flags help with hot-reloading in Docker containers
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - WDS_SOCKET_PORT=0
+    stdin_open: true # interactive mode
+    tty: true
+    depends_on:
+      - backend
