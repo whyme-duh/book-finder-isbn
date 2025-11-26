@@ -1,10 +1,10 @@
-# fly.toml app configuration file generated for backend-dry-log-7180 on 2025-11-25T19:04:16+05:45
+# fly.toml app configuration file generated for backend-thrumming-thunder-3473 on 2025-11-26T09:54:18+05:45
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
 app = 'backend-dry-log-7180'
-primary_region = 'ams'
+primary_region = 'bom'
 console_command = '/code/manage.py shell'
 
 [build]

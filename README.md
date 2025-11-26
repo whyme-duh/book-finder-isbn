@@ -1,70 +1,37 @@
-# Getting Started with Create React App
+# ISBN Book Search App 📚
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack web application designed to provide comprehensive book metadata by bridging the gap between public APIs and web scraping. The application allows users to instantly retrieve detailed book information—including cover images, publication details, and community ratings—simply by entering an ISBN.
 
-## Available Scripts
+## 🧠 Project Architecture: The Hybrid Approach
 
-In the project directory, you can run:
+This project demonstrates a **"Enrichment Pattern"** to data fetching, solving the common problem where fast public APIs lack social proof (ratings) or specific details.
 
-### `npm start`
+1. **Primary Data Layer (Open Library API):**
+   The Django backend first queries the Open Library API to fetch the core structured metadata: Title, Author, Publisher, Publication Date, Page Count, and Cover Image. This ensures fast, reliable, and legal access to the foundational book data.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+2. **Enrichment Layer (Web Scraper):**
+   Simultaneously, the backend utilizes `BeautifulSoup4` to perform targeted scraping on **Goodreads**. It navigates to the book's profile to extract the **Book Rating**, **Number of Ratings** and **Book cover**, data points that are typically unavailable in free public APIs.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+   Extracted book cover image from Goodreads as well, since some books in Open Library API did not include book cover.
 
-### `npm test`
+3. **Unified Response:**
+   These two distinct data sources are merged on the server side into a single, clean JSON object and delivered to the React frontend, providing the user with a holistic view of the book in a single request.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🛠️ Technology Stack
 
-### `npm run build`
+* **Frontend:** React.js, Tailwind CSS, Lucide React (Icons).
+* **Backend:** Django (Python), BeautifulSoup4 (Scraping), Requests.
+* **Infrastructure:** Docker, Docker Compose, Fly.io (Cloud Deployment).
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## ✨ Key Features
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+* **Hybrid Data Aggregation:** Seamlessly combines API JSON responses with HTML-scraped content.
+* **Smart ISBN Validation:** Automatically detects, cleans, and validates ISBN-10 and ISBN-13 formats before processing.
+* **Robust Error Handling:** Distinguishes between network errors, invalid ISBNs, and "Book Not Found" scenarios with user-friendly feedback.
+* **Responsive UI:** A mobile-first design that adapts the layout for phone, tablet, and desktop screens using Tailwind's utility classes.
+* **CORS & Security:** Backend configured with `django-cors-headers` to securely communicate with the separate frontend deployment.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Use of Gemini
+* **README.MD:** Use Gemini to write this README.md with some edits like this use of gemini.
+* **Fly.io:** Never used Fly.io, but used it through the help of Gemini and got to know about Fly CLI and deployed both backend and frontend from this CLI.
+* **Responsive:** While making the web responsive, I used Gemini in some parts like finding the perfect scale for each devices.
